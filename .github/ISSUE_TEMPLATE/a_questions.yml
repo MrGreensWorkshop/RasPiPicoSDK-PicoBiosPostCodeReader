@@ -1,0 +1,29 @@
+name: Ask a Question
+description: Something is not going according to plan?
+title: "<title>"
+labels: "delete me"
+body:
+- type: checkboxes
+  attributes:
+    label: Please check these items before go any further
+    description: Please search to see if an issue or discussion already exists for the problem you encountered.
+    options:
+    - label: I have watched [the related video](https://youtu.be/C4Kq1r9A0k0) on YouTube.
+      required: true
+    - label: I have searched the existing [Issues](https://github.com/MrGreensWorkshop/RasPiPicoSDK-PicoBiosPostCodeReader/issues/).
+      required: true
+    - label: I have searched the existing [Discussions](https://github.com/MrGreensWorkshop/RasPiPicoSDK-PicoBiosPostCodeReader/discussions/).
+      required: true
+- type: markdown
+  attributes:
+    value: |
+      Checked all above but still couldn't find an answer?
+      #### [Click here to ask a question in Discussions](https://github.com/MrGreensWorkshop/RasPiPicoSDK-PicoBiosPostCodeReader/discussions/new?category=problems)
+- type: dropdown
+  id: t
+  attributes:
+    label: "."
+    options:
+      - .
+  validations:
+    required: true

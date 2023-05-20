@@ -1,0 +1,73 @@
+name: Bug report
+description: Create a bug report to help us improve
+title: "<title>"
+labels: bug
+body:
+- type: markdown
+  attributes:
+    value: "## Thank you for contributing to this project!"
+- type: checkboxes
+  attributes:
+    label: Please check these items before go any further
+    description: Please search to see if an issue already exists for the bug you encountered.
+    options:
+    - label: I have watched [the related video](https://youtu.be/C4Kq1r9A0k0) on YouTube.
+      required: true
+    - label: I have searched the existing [Issues](https://github.com/MrGreensWorkshop/RasPiPicoSDK-PicoBiosPostCodeReader/issues/).
+      required: true
+    - label: I have searched the existing [Discussions](https://github.com/MrGreensWorkshop/RasPiPicoSDK-PicoBiosPostCodeReader/discussions/).
+      required: true
+- type: checkboxes
+  attributes:
+    label: Are you sure this is a bug?
+    description: |
+      The Issues in this repo is only used for 'Bug reports' or 'Feature requests'.
+      If you are not sure if this is a bug or not, please ask a question from [Discussions](https://github.com/MrGreensWorkshop/RasPiPicoSDK-PicoBiosPostCodeReader/issues/new?assignees=&labels=delete+me&template=a_questions.yml&title=%3Ctitle%3E).
+    options:
+    - label: I'm sure this is definitely a bug.
+      required: true
+- type: textarea
+  attributes:
+    label: Describe the bug
+    description: |
+      A clear and concise description of what the bug is.
+      Tip: You can attach images or log files by clicking this area to highlight it and then dragging files in.
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Expected Behavior
+    description: A clear and concise description of what you expected to happen.
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Steps To Reproduce
+    description: Steps to reproduce the behavior.
+    #value: |
+    placeholder: |
+      1. Go to '...'
+      2. Push the button when '...'
+      3. See the error
+  validations:
+    required: true
+- type: checkboxes
+  attributes:
+    label: Which device have you used?
+    description: You may select more than one.
+    options:
+    - label: Raspberry Pi Pico
+      required: false
+    - label: Raspberry Pi Pico W (This project hasn't been tested on Raspberry Pi Pico W)
+      required: false
+- type: textarea
+  attributes:
+    label: Anything else?
+    description: |
+      Links? References? Anything that will give us more context about the issue you are encountering!
+  validations:
+    required: false
+- type: markdown
+  attributes:
+    value: |
+      Thank you for taking the time to fill out this bug report.

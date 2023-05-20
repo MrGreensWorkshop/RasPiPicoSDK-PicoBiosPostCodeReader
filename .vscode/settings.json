@@ -1,0 +1,16 @@
+/*
+ * Copyright (c) 2022 Mr. Green's Workshop https://www.MrGreensWorkshop.com
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+{
+    "terminal.integrated.env.osx": {
+        "PICO_SDK_PATH": "${env:HOME}/pico-sdk"
+    },
+    "terminal.integrated.env.linux": {
+        "PICO_SDK_PATH": "${env:HOME}/pico-sdk"
+    },
+    "terminal.integrated.env.windows": {
+        "PICO_SDK_PATH": "${env:USERPROFILE}\\pico-sdk",
+    }
+}

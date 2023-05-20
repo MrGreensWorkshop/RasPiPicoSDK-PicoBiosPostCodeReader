@@ -1,0 +1,29 @@
+/*
+ * Copyright (c) 2022 Mr. Green's Workshop https://www.MrGreensWorkshop.com
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+{
+    "version": "0.2.0",
+    "configurations": [{ 
+      "name": "Pico SDK Debug",
+      "device": "RP2040",
+      "gdbPath": "arm-none-eabi-gdb",
+      "cwd": "${workspaceRoot}",
+      "executable": "build/PicoBiosPostCodeReader.elf",
+      "request": "launch",
+      "type": "cortex-debug",
+      "servertype": "openocd",
+      "configFiles": [
+        "/interface/picoprobe.cfg",
+        "/target/rp2040.cfg"
+      ],
+      "searchDir": ["${env:HOME}/openocd/tcl"],
+      "svdFile": "${env:HOME}/pico-sdk/src/rp2040/hardware_regs/rp2040.svd",
+      "runToEntryPoint": "main",
+      "postRestartCommands": [
+        "break main",
+        "continue"
+      ]
+    }]
+  }
