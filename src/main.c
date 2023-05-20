@@ -14,6 +14,16 @@
 #define LED_STATUS_PIN PICO_DEFAULT_LED_PIN
 #define INTERVAL_IM_ALIVE_MS (1000)
 
+typedef union __attribute__((__packed__)) {
+  struct {
+    uint16_t addr : 16;
+    uint8_t cy_dir : 4;
+    uint8_t start : 4;
+    uint16_t resv : 8;
+  }val;
+  uint32_t value;
+}lpcIOFrame;
+
 void gpio_initialization() {
     // Init the Status LED GPIO pin. (Also sets the pin to low.)
     gpio_init(LED_STATUS_PIN);
@@ -39,6 +49,16 @@ void flash_led_once(void) {
     gpio_put(LED_STATUS_PIN, 0);
 }
 
+uint32_t reverse_nibbles(uint32_t in_val) {
+    uint32_t out_val = 0;
+
+    for(uint8_t i = 0; i < 32; i += 4) {
+        out_val <<= 4;
+        out_val |= in_val >> i & 0xf;
+    }
+    return out_val;
+}
+
 int init_lpc_bus_sniffer(PIO pio) {
     // LAD[0-3] + LCLK + LFRAME which starts from GPIO0
     uint lpc_bus_pin_base = 0;
@@ -62,9 +82,20 @@ int init_lpc_bus_sniffer(PIO pio) {
     lpc_bus_sniffer_program_init(pio, sm, offset, lpc_bus_pin_base, LED_POST_CODE_PIN_BASE);
     pio_sm_set_enabled(pio, sm, true);
 
-    // To sniff the POST codes
-    // Set the filter to I/O write cycle (0x2) and the address to 0x80.
-    pio->txf[sm] = 0x08002000;
+    // Set the I/O RW frame filter
+    lpcIOFrame filter; 
+    filter.value = 0;
+    // Set Start
+    filter.val.start = 0x0;
+    // Set Cycle/Dir (write: 0x2, read: 0x0)
+    filter.val.cy_dir = 0x2;
+    // Set I/O port address  (POST codes)
+    filter.val.addr = 0x80;
+    
+    // Print filter (0x08002000)
+    printf("Filter: 0x%08x\n", reverse_nibbles(filter.value));
+
+    pio->txf[sm] = reverse_nibbles(filter.value);
 
     printf("program loaded at %d, sm: %d\n", offset, sm);
     return sm;
