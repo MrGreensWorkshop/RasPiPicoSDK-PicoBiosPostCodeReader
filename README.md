@@ -26,6 +26,11 @@ Thank you for considering [supporting my work!](#you-can-support-my-work)
 
 I usually use old or junk parts on my projects to reduce electronic waste and support the SDGs. I was working on a project to reuse an x86-based firewall that I came across in an online auction. And I found myself reading BIOS post-codes. I thought it would be a good opportunity to talk about how the LPC bus and I/O cycles work by making a BIOS POST code reader project. So, here we are.
 
+### Features / Fixes
+
+- LPC bus sniffer
+- POST code output to USB CDC
+
 ### Compilation
 
 1. Clone the repo as shown below, or [download latest release](https://github.com/MrGreensWorkshop/RasPiPicoSDK-PicoBiosPostCodeReader/releases/latest).

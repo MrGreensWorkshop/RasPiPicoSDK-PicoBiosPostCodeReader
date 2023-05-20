@@ -1,0 +1,88 @@
+.program lpc_bus_sniffer
+;.side_set 1 opt                 ; [DEBUG] side_set <count> (opt) (pindirs) 
+
+.define NIBBLE_LOOP_COUNT 6
+
+pull                             ; Get the filter from TX FIFO to the OSR.
+mov Y, OSR                       ; Copy OSR to Y.
+.wrap_target
+entry_point:
+mov ISR, null                    ; Clean the ISR.
+set X, (NIBBLE_LOOP_COUNT - 1)   ; Set the value to X register.
+wait 0 pin 5                     ; Wait until the LFRAME pin goes low.
+
+; Get 6 nibble (START + CY/DR + ADDR[3-0])
+read_nibble1:
+wait 0 pin 4                     ; Wait until the LCLK pin goes low.
+in pins, 4                       ; Read the LAD[0-3] pins.
+wait 1 pin 4                     ; Wait until the LCLK pin goes high.
+jmp X-- read_nibble1             ; If X is not equal to zero, decrement it and jump.
+
+; Check the frame, START + CY/DR + ADDR[0-3]
+mov X, ISR                       ; Copy ISR to X.
+jmp X!=Y entry_point             ; If X and Y registers are not equal jump.
+
+; Get 1 nibble (DATA[0])
+wait 0 pin 4                     ; Wait until the LCLK pin goes low.
+in pins, 4                       ; Get the DATA[0].
+wait 1 pin 4                     ; Wait until the LCLK pin goes high.
+
+; Get 1 nibble (DATA[1])
+wait 0 pin 4                     ; Wait until the LCLK pin goes low.
+in pins, 4                       ; Get the DATA[1].
+wait 1 pin 4                     ; Wait until the LCLK pin goes high.
+
+in null, 24                      ; Shift the ISR 24 bit to get DATA.
+push                             ; Push to get the DATA value on terminal.
+.wrap
+
+% c-sdk {
+
+//#define SIDE_PIN 26   // For debugging
+
+void lpc_bus_sniffer_program_init(PIO pio, uint sm, uint offset, uint lpc_bus_pin_base) {
+   pio_sm_config c = lpc_bus_sniffer_program_get_default_config(offset);
+
+   // Connect the GPIOs to selected PIO block
+   for(uint i = lpc_bus_pin_base; i < lpc_bus_pin_base + 6; i++) {
+      pio_gpio_init(pio, i);
+   }
+
+#ifdef SIDE_PIN
+   pio_gpio_init(pio, SIDE_PIN);
+#endif
+
+   // Set the selected pin directions for the selected 6 pins. LAD[0-3] + LCLK + LFRAME (false: in)
+   pio_sm_set_consecutive_pindirs(pio, sm, lpc_bus_pin_base, 6, false);
+
+#ifdef SIDE_PIN
+   // Set the selected pin direction for the selected 1 pin. SIDE_PIN (true: out)
+   pio_sm_set_consecutive_pindirs(pio, sm, SIDE_PIN, 1, true );
+#endif
+
+   sm_config_set_in_shift(
+      &c,
+      true,  // ShiftDir : true: shift ISR to right, false: shift ISR to left
+      false, // AutoPush : true: enabled, false: disabled
+      0      // AutoPush threshold: <0-32>
+   );
+
+   sm_config_set_out_shift(
+      &c,
+      true,  // ShiftDir : true: shift OSR to right, false: shift OSR to left
+      false, // AutoPull : true: enabled, false: disabled
+      0      // AutoPull threshold: <0-32>
+   );
+
+   // Set 'IN' base pin. To read the LAD[0-3].
+   sm_config_set_in_pins(&c, lpc_bus_pin_base);
+
+#ifdef SIDE_PIN
+   // Set 'SIDESET' base pin. It's for debugging.
+   sm_config_set_sideset_pins(&c, SIDE_PIN);
+#endif
+
+   pio_sm_init(pio, sm, offset, &c);
+}
+
+%}
