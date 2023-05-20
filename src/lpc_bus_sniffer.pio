@@ -1,7 +1,7 @@
 .program lpc_bus_sniffer
 ;.side_set 1 opt                 ; [DEBUG] side_set <count> (opt) (pindirs) 
 
-.define NIBBLE_LOOP_COUNT 6
+.define NIBBLE_LOOP_COUNT 4
 
 pull                             ; Get the filter from TX FIFO to the OSR.
 mov Y, OSR                       ; Copy OSR to Y.
@@ -11,7 +11,21 @@ mov ISR, null                    ; Clean the ISR.
 set X, (NIBBLE_LOOP_COUNT - 1)   ; Set the value to X register.
 wait 0 pin 5                     ; Wait until the LFRAME pin goes low.
 
-; Get 6 nibble (START + CY/DR + ADDR[3-0])
+; Get START
+wait 0 pin 4                     ; Wait until the LCLK pin goes low.
+in pins, 4                       ; Read START.
+wait 1 pin 4                     ; Wait until the LCLK pin goes high.
+
+; Get CY/DR
+wait 0 pin 4                     ; Wait until the LCLK pin goes low.
+in pins, 4                       ; Read CY/DR.
+; Check if the LFRAME is still low.
+jmp pin continue                 ; If jmp pin is high, jump to continue.
+jmp entry_point;                 ; Jump to start.
+continue:
+wait 1 pin 4                     ; Wait until the LCLK pin goes high.
+
+; Get 4 nibble (ADDR[3-0])
 read_nibble1:
 wait 0 pin 4                     ; Wait until the LCLK pin goes low.
 in pins, 4                       ; Read the LAD[0-3] pins.
@@ -88,6 +102,9 @@ void lpc_bus_sniffer_program_init(PIO pio, uint sm, uint offset, uint lpc_bus_pi
 
    // Set 'OUT' base pin. To drive the LED's.
    sm_config_set_out_pins(&c, led_pin_base, 8);
+
+   // Set 'JMP' pin. To read the LFRAME.
+   sm_config_set_jmp_pin(&c, lpc_bus_pin_base + 5);
 
 #ifdef SIDE_PIN
    // Set 'SIDESET' base pin. It's for debugging.
