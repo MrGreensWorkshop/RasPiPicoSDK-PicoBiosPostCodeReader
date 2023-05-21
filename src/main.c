@@ -8,6 +8,9 @@
 // Set the system frequency to 33 MHz x 6 to make time for handling LPC frames.
 #define SYS_FREQ_IN_KHZ (198 * 1000)
 
+// POST Code LEDs[0–8], which start from GPIO8.
+#define LED_POST_CODE_PIN_BASE (8U)
+
 #define LED_STATUS_PIN PICO_DEFAULT_LED_PIN
 #define INTERVAL_IM_ALIVE_MS (1000)
 
@@ -17,6 +20,15 @@ void gpio_initialization() {
 
     // Set the Status LED GPIO pin as output.
     gpio_set_dir(LED_STATUS_PIN, GPIO_OUT);
+    
+    // Init the POST Code LED pins.
+    gpio_init_mask(0xffu << LED_POST_CODE_PIN_BASE);
+
+    // Set the POST Code LED pins to high. (led's are common anode)
+    gpio_set_mask(0xffu << LED_POST_CODE_PIN_BASE);
+    
+    // Set the POST Code LED pins as output.
+    gpio_set_dir_out_masked(0xffu << LED_POST_CODE_PIN_BASE);
 }
 
 void flash_led_once(void) {
@@ -47,7 +59,7 @@ int init_lpc_bus_sniffer(PIO pio) {
         return -2;
     }
 
-    lpc_bus_sniffer_program_init(pio, sm, offset, lpc_bus_pin_base);
+    lpc_bus_sniffer_program_init(pio, sm, offset, lpc_bus_pin_base, LED_POST_CODE_PIN_BASE);
     pio_sm_set_enabled(pio, sm, true);
 
     // To sniff the POST codes

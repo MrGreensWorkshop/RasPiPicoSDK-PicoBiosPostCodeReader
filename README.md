@@ -30,6 +30,7 @@ I usually use old or junk parts on my projects to reduce electronic waste and su
 
 - LPC bus sniffer
 - POST code output to USB CDC
+- POST code output to the LEDs
 
 ### Compilation
 
