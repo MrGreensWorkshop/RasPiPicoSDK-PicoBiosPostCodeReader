@@ -35,15 +35,25 @@ void gpio_initialization() {
 
     // Set the Status LED GPIO pin as output.
     gpio_set_dir(LED_STATUS_PIN, GPIO_OUT);
-    
-    // Init the POST Code LED pins.
-    gpio_init_mask(0xffu << LED_POST_CODE_PIN_BASE);
 
-    // Set the POST Code LED pins to high. (led's are common anode)
-    gpio_set_mask(0xffu << LED_POST_CODE_PIN_BASE);
+    for(uint i = LPC_BUS_PIN_BASE; i < LPC_BUS_PIN_BASE + LPC_BUS_PIN_COUNT; i++) {
+        // Init the LAD[0-3] + LCLK + LFRAME pins.
+        gpio_init(i);
+
+        // Disable internal pull up and downs.
+        gpio_disable_pulls(i);
+    }
     
-    // Set the POST Code LED pins as output.
-    gpio_set_dir_out_masked(0xffu << LED_POST_CODE_PIN_BASE);
+    for(uint i = LED_POST_CODE_PIN_BASE; i < LED_POST_CODE_PIN_BASE + LED_POST_CODE_PIN_COUNT; i++) {
+        // Init the POST Code LED pins. (Also sets the pin to input.)
+        gpio_init(i);
+
+        // Set the POST Code LED pins as output.
+        gpio_set_dir(i, GPIO_OUT);
+
+        // Set the POST Code LED pins to high. (led's are common anode)
+        gpio_put(i, 1);
+    }
 }
 
 void flash_led_once(void) {
