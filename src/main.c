@@ -8,8 +8,13 @@
 // Set the system frequency to 33 MHz x 6 to make time for handling LPC frames.
 #define SYS_FREQ_IN_KHZ (198 * 1000)
 
+// LAD[0-3] + LCLK + LFRAME, which starts from GPIO0.
+#define LPC_BUS_PIN_BASE (0U)
+#define LPC_BUS_PIN_COUNT (6U)
+
 // POST Code LEDs[0–8], which start from GPIO8.
 #define LED_POST_CODE_PIN_BASE (8U)
+#define LED_POST_CODE_PIN_COUNT (8U)
 
 #define LED_STATUS_PIN PICO_DEFAULT_LED_PIN
 #define INTERVAL_IM_ALIVE_MS (1000)
@@ -60,8 +65,6 @@ uint32_t reverse_nibbles(uint32_t in_val) {
 }
 
 int init_lpc_bus_sniffer(PIO pio) {
-    // LAD[0-3] + LCLK + LFRAME which starts from GPIO0
-    uint lpc_bus_pin_base = 0;
     uint offset;
 
     printf("initializing the lpc bus sniffer program\n");
@@ -79,7 +82,7 @@ int init_lpc_bus_sniffer(PIO pio) {
         return -2;
     }
 
-    lpc_bus_sniffer_program_init(pio, sm, offset, lpc_bus_pin_base, LED_POST_CODE_PIN_BASE);
+    lpc_bus_sniffer_program_init(pio, sm, offset, LPC_BUS_PIN_BASE, LPC_BUS_PIN_COUNT, LED_POST_CODE_PIN_BASE, LED_POST_CODE_PIN_COUNT);
     pio_sm_set_enabled(pio, sm, true);
 
     // Set the I/O RW frame filter

@@ -56,15 +56,15 @@ push                             ; Push to get the DATA value on terminal.
 
 //#define SIDE_PIN 26   // For debugging
 
-void lpc_bus_sniffer_program_init(PIO pio, uint sm, uint offset, uint lpc_bus_pin_base, uint led_pin_base) {
+void lpc_bus_sniffer_program_init(PIO pio, uint sm, uint offset, uint lpc_bus_pin_base, uint lpc_bus_pin_count, uint led_pin_base, uint led_pin_count) {
    pio_sm_config c = lpc_bus_sniffer_program_get_default_config(offset);
 
    // Connect the GPIOs to selected PIO block
-   for(uint i = lpc_bus_pin_base; i < lpc_bus_pin_base + 6; i++) {
+   for(uint i = lpc_bus_pin_base; i < lpc_bus_pin_base + lpc_bus_pin_count; i++) {
       pio_gpio_init(pio, i);
    }
 
-   for(uint i = led_pin_base; i < led_pin_base + 8; i++) {
+   for(uint i = led_pin_base; i < led_pin_base + led_pin_count; i++) {
       pio_gpio_init(pio, i);
    }
 
@@ -73,10 +73,10 @@ void lpc_bus_sniffer_program_init(PIO pio, uint sm, uint offset, uint lpc_bus_pi
 #endif
 
    // Set the selected pin directions for the selected 6 pins. LAD[0-3] + LCLK + LFRAME (false: in)
-   pio_sm_set_consecutive_pindirs(pio, sm, lpc_bus_pin_base, 6, false);
+   pio_sm_set_consecutive_pindirs(pio, sm, lpc_bus_pin_base, lpc_bus_pin_count, false);
 
    // Set the selected pin directions for the selected 8 pins. LED[0-8] (true: out)
-   pio_sm_set_consecutive_pindirs(pio, sm, led_pin_base, 8, true);
+   pio_sm_set_consecutive_pindirs(pio, sm, led_pin_base, led_pin_count, true);
 
 #ifdef SIDE_PIN
    // Set the selected pin direction for the selected 1 pin. SIDE_PIN (true: out)
@@ -101,7 +101,7 @@ void lpc_bus_sniffer_program_init(PIO pio, uint sm, uint offset, uint lpc_bus_pi
    sm_config_set_in_pins(&c, lpc_bus_pin_base);
 
    // Set 'OUT' base pin. To drive the LED's.
-   sm_config_set_out_pins(&c, led_pin_base, 8);
+   sm_config_set_out_pins(&c, led_pin_base, led_pin_count);
 
    // Set 'JMP' pin. To read the LFRAME.
    sm_config_set_jmp_pin(&c, lpc_bus_pin_base + 5);

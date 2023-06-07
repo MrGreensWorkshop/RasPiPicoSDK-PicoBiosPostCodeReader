@@ -33,6 +33,7 @@ I usually use old or junk parts on my projects to reduce electronic waste and su
 - POST code output to the LEDs
 - Filter LPC I/0 frame with start, cycle/dir and address
 - Abort frame support
+- Defining pin bases and counts (Refactoring)
 
 ### Compilation
 
