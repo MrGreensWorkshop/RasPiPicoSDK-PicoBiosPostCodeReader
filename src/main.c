@@ -6,7 +6,7 @@
 #include "lpc_bus_sniffer.pio.h"
 
 // Set the system frequency to 33 MHz x 6 to make time for handling LPC frames.
-#define SYS_FREQ_IN_KHZ (198 * 1000)
+#define SYS_FREQ_IN_KHZ (264 * 1000)
 
 // LAD[0-3] + LCLK + LFRAME, which starts from GPIO0.
 #define LPC_BUS_PIN_BASE (0U)
@@ -21,7 +21,7 @@
 
 typedef union __attribute__((__packed__)) {
   struct {
-    uint16_t addr : 16;
+    uint16_t addr : 12;
     uint8_t cy_dir : 4;
     uint8_t start : 4;
     uint16_t resv : 8;
@@ -103,7 +103,8 @@ int init_lpc_bus_sniffer(PIO pio) {
     // Set Cycle/Dir (write: 0x2, read: 0x0)
     filter.val.cy_dir = 0x2;
     // Set I/O port address  (POST codes)
-    filter.val.addr = 0x80;
+    // This only gets address stars with 0x8X
+    filter.val.addr = 0x8;
     
     // Print filter (0x08002000)
     printf("Filter: 0x%08x\n", reverse_nibbles(filter.value));
@@ -153,7 +154,7 @@ int main() {
     while(1) {
         if (!pio_sm_is_rx_fifo_empty(_pio0, sm_lpc_bus_sniffer)) {
             uint32_t rxdata = _pio0->rxf[sm_lpc_bus_sniffer];
-            printf("data: %02x\n", rxdata);
+            printf("data: 0x%08x\n", rxdata);
         }
     }
 }
