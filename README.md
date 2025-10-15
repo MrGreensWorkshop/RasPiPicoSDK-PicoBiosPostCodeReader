@@ -1,8 +1,8 @@
 ## BIOS POST Code Reader with the Raspberry Pi Pico
 
 [<img src="https://img.shields.io/github/issues/MrGreensWorkshop/RasPiPicoSDK-PicoBiosPostCodeReader" alt="GitHub issues" data-no-image-viewer>](https://github.com/MrGreensWorkshop/RasPiPicoSDK-PicoBiosPostCodeReader/issues)
-[<img src="https://img.shields.io/github/forks/MrGreensWorkshop/RasPiPicoSDK-PicoBiosPostCodeReader" alt="GitHub forks" data-no-image-viewer>](https://github.com/MrGreensWorkshop/RasPiPicoSDK-PicoBiosPostCodeReader/blob/main/README.md#readme)
-[<img src="https://img.shields.io/github/stars/MrGreensWorkshop/RasPiPicoSDK-PicoBiosPostCodeReader" alt="GitHub stars" data-no-image-viewer>](https://github.com/MrGreensWorkshop/RasPiPicoSDK-PicoBiosPostCodeReader/blob/main/README.md#readme)
+[<img src="https://img.shields.io/github/forks/MrGreensWorkshop/RasPiPicoSDK-PicoBiosPostCodeReader?style=flat" alt="GitHub forks" data-no-image-viewer>](https://github.com/MrGreensWorkshop/RasPiPicoSDK-PicoBiosPostCodeReader/blob/main/README.md#readme)
+[<img src="https://img.shields.io/github/stars/MrGreensWorkshop/RasPiPicoSDK-PicoBiosPostCodeReader?style=flat" alt="GitHub stars" data-no-image-viewer>](https://github.com/MrGreensWorkshop/RasPiPicoSDK-PicoBiosPostCodeReader/blob/main/README.md#readme)
 [<img src="https://img.shields.io/github/license/MrGreensWorkshop/RasPiPicoSDK-PicoBiosPostCodeReader" alt="GitHub license" data-no-image-viewer>](https://github.com/MrGreensWorkshop/RasPiPicoSDK-PicoBiosPostCodeReader/blob/main/LICENSE.txt)
 [<img src="https://shields.io/badge/Github%20Sponsors-Support%20me-blue?logo=GitHub+Sponsors" alt="Support me on GitHub Sponsors" data-no-image-viewer>](https://github.com/sponsors/MrGreensWorkshop "Support me on GitHub Sponsors")
 [<img src="https://shields.io/badge/Patreon-Support%20me-blue?logo=Patreon" alt="Support me on Patreon" data-no-image-viewer>](https://patreon.com/MrGreensWorkshop "Support me on Patreon")
